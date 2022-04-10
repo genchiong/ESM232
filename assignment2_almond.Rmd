@@ -18,12 +18,11 @@ source(here("R/almond_yield.R"))
 ```{r}
 # read in the clim data 
 clim <- read_delim(here("data", "clim.txt"), delim = " ")
-clim_original <- read_delim(here("data", "clim_original.txt"), delim = " ")
 
-# wrangle the data 
-clim_february <- clim %>% 
-  filter(month == 2) %>% 
-  group_by(year) %>% 
+# wrangle the data to find monthly averages of min temp and precipitation for February
+clim_jan_feb <- clim %>% 
+  filter(month %in% c(1, 2)) %>% 
+  group_by(year, month) %>% 
   summarize(avg_tmin = mean(tmin_c, na.rm = TRUE),
             avg_precip = mean(precip, na.rm = TRUE))
 ```
@@ -31,7 +30,17 @@ clim_february <- clim %>%
 
 ```{r}
 # yield 
-yield_1999 <- almond_yield(year == 1999)
+yield_2000 <- almond_yield(year == 2000)
+
+yield_2001 <- almond_yield
+
+yield_2002 <- almond_yield
+```
+
+
+```{r}
+# graph
+
 ```
 
 
