@@ -1,25 +1,17 @@
 #' almond_yield
 #'
 #' Compute amount of almond yield based on climate data
-#' @param monthly_temp (C)
-#' @param monthly_precip (mm)
 #' @param year 
-#' @param min_temp
+#' @param min_temp (degrees C)
+#' @param precip (mm)
 #' @param constant (default = 0.28)
-#'
-#'
 #' @return yield anomaly (tons/acre)
 
 
-almond_yield = function(    ) {
+almond_yield = function(year, min_temp, precip, constant = 0.28) {
   
-  # filter out the month of february
-  # input should be the year 
-  
-  
-  
-  result = -0.015(min temp for february) - 0.0046(min temp for february^2) 
-  - 0.07(february precip) + 0.0043(february precip^2) + constant 
+  result = -0.015(min_temp) - 0.0046(min_temp^2) 
+  - 0.07(precip) + 0.0043(precip^2) + constant 
   
   return(result)
 }
