@@ -17,6 +17,7 @@ source(here("R/almond_yield.R"))
 
 ```{r}
 # read in the clim data 
+clim_original <- read_delim(here("data", "clim_original.txt"), delim = " ")
 clim <- read_delim(here("data", "clim.txt"), delim = " ")
 
 # wrangle the data to find monthly averages of min temp and precipitation for February
