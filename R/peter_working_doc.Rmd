@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 calc_almond_yield <- function(df, params) {
   
   years <- unique(df$year)
-  yields_df <- data.frame(year = years, yield = numeric(n_years))
+  yields_df <- data.frame(year = years, yield = numeric(length(years)))
   
   for (i in seq_along(years)) {
     
@@ -23,8 +23,8 @@ calc_almond_yield <- function(df, params) {
         length(df$precip[df$year == year_i & df$month == 1]) != 0) 
       {
     
-        min_temp_feb <- min(df$tmin_c[df$year == year_i & df$month == 2])
-        precip_jan <- sum(df$precip[df$year == year_i & df$month == 1])
+        min_temp_feb <- mean(df$tmin_c[df$year == year_i & df$month == 2])
+        precip_jan <- mean(df$precip[df$year == year_i & df$month == 1])
         
         yield <- (params[1] * min_temp_feb) + (params[2] * min_temp_feb ^ 2) +
           (params[3] * precip_jan) + (params[4] * precip_jan ^ 2) + params[5]

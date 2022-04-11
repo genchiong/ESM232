@@ -2,7 +2,7 @@
 title: "Assignment 2 - Almond Yield"
 author: "Genevieve Chiong"
 date: "4/9/2022"
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -10,6 +10,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
 library(here)
+library(patchwork)
+library(kableExtra)
 
 source(here("R/almond_yield.R"))
 ```
@@ -28,15 +30,52 @@ clim_jan_feb <- clim %>%
             avg_precip = mean(precip, na.rm = TRUE))
 ```
 
+```{r, results='asis'}
+yield_anomalies <- almond_yield(clim)
+
+yield_anomalies %>% kable()
+```
 
 ```{r}
-# yield 
-yield_2000 <- almond_yield(year == 2000)
-
-yield_2001 <- almond_yield
-
-yield_2002 <- almond_yield
+yield_plot <- ggplot(yield_anomalies, aes(x = year, y = yield)) +
+  geom_line() +
+  labs(title = "Annual almond yield anomalies", y = "Yield (tons/acre)", x = "Year") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
 ```
+
+
+```{r}
+sum_precip <- clim %>% 
+  filter(month == 1) %>% 
+  group_by(year, month) %>% 
+  summarize(sum_precip = sum(precip))
+
+mean_min_temp <- clim %>% 
+  filter(month == 2) %>% 
+  group_by(year, month) %>% 
+  summarize(mean_min_temp = mean(tmin_c))
+```
+
+```{r}
+precip_plot <- ggplot(sum_precip, aes(x = year, y = sum_precip)) +
+  geom_line() +
+  labs(title = "January Precip", y = "Precip (mm)", x = "Year") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+temp_plot <- ggplot(mean_min_temp, aes(x = year, y = mean_min_temp)) +
+  geom_line() +
+  labs(title = "February mean min temperatures", y = "Mean min \n Feb temp (ºC)", x = "Year") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+```{r, fig.height=4}
+yield_plot / precip_plot / temp_plot
+```
+
+
 
 
 ```{r}

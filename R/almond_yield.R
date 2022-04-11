@@ -1,24 +1,45 @@
 #' almond_yield
 #'
 #' Compute amount of almond yield based on climate data
-#' @param year 
-#' @param min_temp (degrees C)
-#' @param precip (mm)
-#' @param constant (default = 0.28)
-#' @return yield anomaly (tons/acre)
+#' @param df dataframe containing climate data
+#' @param params numeric vector of parameters values
+#' @return yields_df: dataframe containing yield anomaly (tons/acre) for each year
 
 
-almond_yield = function(clim, year, min_temp, precip, constant = 0.28) {
+almond_yield <- function(df, params = c(-0.015, -0.0046, -0.07, 0.0043, 0.28)) {
   
-  #filter(year = year)
-  #min_temp for month of february
-  #precip for month of january 
-
+  years <- unique(df$year)
+  yields_df <- data.frame(year = years, yield = numeric(length(years)))
   
-  result = (-0.015*min_temp) - (0.0046*min_temp^2) 
-  - (0.07*precip) + (0.0043*precip^2) + constant 
+  for (i in seq_along(years)) {
+    
+    year_i = years[i]
+    
+    if (length(df$tmin_c[df$year == year_i & df$month == 2]) != 0 &
+        length(df$precip[df$year == year_i & df$month == 1]) != 0) 
+    {
+      
+      min_temp_feb <- mean(df$tmin_c[df$year == year_i & df$month == 2])
+      precip_jan <- sum(df$precip[df$year == year_i & df$month == 1])
+      
+      yield <- (params[1] * min_temp_feb) + (params[2] * min_temp_feb ^ 2) +
+        (params[3] * precip_jan) + (params[4] * precip_jan ^ 2) + params[5]
+      
+      yields_df[i, "yield"] <- yield
+      
+    } else 
+      
+    {
+      
+      yields_df[i, "yield"] <- NA
+      warning(paste0("year '", year_i, "' lacks sufficient data to calculate yield anomaly"))
+      
+    }
+    
+  } 
   
-  return(result)
+  return(yields_df)
+  
 }
 
 
