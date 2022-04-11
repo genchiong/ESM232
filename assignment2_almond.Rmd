@@ -39,7 +39,7 @@ yield_anomalies %>% kable()
 ```{r}
 yield_plot <- ggplot(yield_anomalies, aes(x = year, y = yield)) +
   geom_line() +
-  labs(title = "Annual almond yield anomalies", y = "Yield (tons/acre)", x = "Year") +
+  labs(title = "Annual almond yield anomalies", y = "Yield (tons/acre)", x = "Year", tag = "a") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5))
 ```
@@ -60,13 +60,13 @@ mean_min_temp <- clim %>%
 ```{r}
 precip_plot <- ggplot(sum_precip, aes(x = year, y = sum_precip)) +
   geom_line() +
-  labs(title = "January Precip", y = "Precip (mm)", x = "Year") +
+  labs(title = "January Precip", y = "Precip (mm)", x = "Year", tag = "b") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5))
 
 temp_plot <- ggplot(mean_min_temp, aes(x = year, y = mean_min_temp)) +
   geom_line() +
-  labs(title = "February mean min temperatures", y = "Mean min \n Feb temp (ºC)", x = "Year") +
+  labs(title = "February mean min temperatures", y = "Mean min \n Feb temp (ºC)", x = "Year", tag = "c") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5))
 ```
@@ -74,6 +74,7 @@ temp_plot <- ggplot(mean_min_temp, aes(x = year, y = mean_min_temp)) +
 ```{r, fig.height=4}
 yield_plot / precip_plot / temp_plot
 ```
+
 
 
 
