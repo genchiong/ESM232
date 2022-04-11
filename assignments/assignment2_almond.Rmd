@@ -22,17 +22,22 @@ clim <- read.table(here("data", "clim_original.txt"))
 ```
 
 ```{r}
+# run function 
 yield_anomalies <- almond_yield(clim) 
 
+# create table for the clim data 
 yield_anomalies %>% 
-  kable(col.names = c("Year", "Almond Yield")) %>%
-  kable_styling(bootstrap_options = "striped",
+  kable(col.names = c("Year", "Almond Yield"),
+        booktabs = T) %>%
+  kable_styling(latex_options = c("striped", "hold_position"), 
+                position = "center",
                 full_width = FALSE)
 ```
 
-**Table 1.** The above table shows annual almond yield anomaly (tons/acre) estimated by linear regression using precipitation and temperature data.
+**Table 1.** Annual almond yield anomaly (tons/acre) estimated by linear regression using precipitation and temperature datafor 1998-2010.
 
 ```{r}
+# graph yield anomalies for clim dataset
 yield_plot <- ggplot(yield_anomalies, aes(x = year, y = yield)) +
   geom_line() +
   labs(title = "Annual Almond Yield Anomalies", 
@@ -43,11 +48,13 @@ yield_plot <- ggplot(yield_anomalies, aes(x = year, y = yield)) +
 ```
 
 ```{r}
+# find sum of precipitation for January 
 sum_precip <- clim %>% 
   filter(month == 1) %>% 
   group_by(year, month) %>% 
   summarize(sum_precip = sum(precip))
 
+# find mean of minimum temperature for February
 mean_min_temp <- clim %>% 
   filter(month == 2) %>% 
   group_by(year, month) %>% 
@@ -55,6 +62,7 @@ mean_min_temp <- clim %>%
 ```
 
 ```{r}
+# graph precipitation 
 precip_plot <- ggplot(sum_precip, aes(x = year, y = sum_precip)) +
   geom_line() +
   labs(title = "January Precipitation", 
@@ -63,6 +71,7 @@ precip_plot <- ggplot(sum_precip, aes(x = year, y = sum_precip)) +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5))
 
+# graph temperature 
 temp_plot <- ggplot(mean_min_temp, aes(x = year, y = mean_min_temp)) +
   geom_line() +
   labs(title = "February Mininum Temperatures", 
