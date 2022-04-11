@@ -2,7 +2,7 @@
 title: "ESM 262 Assignment 2 - Almond Yield"
 author: "Genevieve Chiong, Peter Menzies, Cullen Molitor"
 date: "4/9/2022"
-output: pdf_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -30,7 +30,7 @@ yield_anomalies %>% kable(col.names = c("Year",
                 full_width = FALSE)
 ```
 
-The above table shows annual almond yield anomaly (tons/acre) estimated by linear regression using precipitation and temperature data.
+**Table 1.** The above table shows annual almond yield anomaly (tons/acre) estimated by linear regression using precipitation and temperature data.
 
 ```{r}
 yield_plot <- ggplot(yield_anomalies, aes(x = year, y = yield)) +
@@ -71,7 +71,7 @@ yield_plot / precip_plot / temp_plot
 ```
 
 
-Plot (a) shows estimated annual almond yield anomaly based on temperature and precipitation data. 
+**Graph 1.** Plot (a) shows estimated annual almond yield anomaly based on temperature and precipitation data. 
 Plot (b) shows summed precipitation in January of each year. 
 Plot (c) shows mean minimum daily temperatures in February of each year.
 
