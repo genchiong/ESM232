@@ -11,7 +11,6 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(here)
 library(patchwork)
-library(kableExtra)
 
 source(here("R/almond_yield.R"))
 ```
@@ -21,25 +20,21 @@ source(here("R/almond_yield.R"))
 # read in the clim data 
 clim_original <- read_delim(here("data", "clim_original.txt"), delim = " ")
 clim <- read_delim(here("data", "clim.txt"), delim = " ")
-
-# wrangle the data to find monthly averages of min temp and precipitation for February
-clim_jan_feb <- clim %>% 
-  filter(month %in% c(1, 2)) %>% 
-  group_by(year, month) %>% 
-  summarize(avg_tmin = mean(tmin_c, na.rm = TRUE),
-            avg_precip = mean(precip, na.rm = TRUE))
 ```
 
-```{r, results='asis'}
+```{r}
 yield_anomalies <- almond_yield(clim)
 
-yield_anomalies %>% kable()
+yield_anomalies %>% knitr::kable()
 ```
+
+The above table shows annual almond yield anomaly estimated by linear regression using precipitation and temperature data.
+
 
 ```{r}
 yield_plot <- ggplot(yield_anomalies, aes(x = year, y = yield)) +
   geom_line() +
-  labs(title = "Annual Almond Yield Anomalies", y = "Yield (tons/acre)", x = "Year") +
+  labs(title = "Annual almond yield anomalies", y = "Yield (tons/acre)", x = "Year", tag = "a") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5))
 ```
@@ -60,21 +55,25 @@ mean_min_temp <- clim %>%
 ```{r}
 precip_plot <- ggplot(sum_precip, aes(x = year, y = sum_precip)) +
   geom_line() +
-  labs(title = "January Precipitation", y = "Precipitation (mm)", x = "Year") +
+  labs(title = "January Precip", y = "Precip (mm)", x = "Year", tag = "b") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5))
 
 temp_plot <- ggplot(mean_min_temp, aes(x = year, y = mean_min_temp)) +
   geom_line() +
-  labs(title = "February Mean Minimum Temperature", y = "Mean Minimum \n February Temperature (ºC)", x = "Year") +
+  labs(title = "February mean min temperatures", y = "Mean min \n Feb temp (ºC)", x = "Year", tag = "c") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
-```{r, fig.height=4}
+```{r}
 yield_plot / precip_plot / temp_plot
 ```
 
+
+Plot (a) shows estimated annual almond yield anomaly based on temperature and precipitation data. 
+Plot (b) shows summed precipitation in January of each year. 
+Plot (c) shows mean minimum daily temperatures in February of each year.
 
 
 
