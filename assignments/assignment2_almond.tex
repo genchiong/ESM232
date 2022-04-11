@@ -5,7 +5,7 @@
 \documentclass[
 ]{article}
 \title{Assignment 2 - Almond Yield}
-\author{Genevieve Chiong}
+\author{Genevieve Chiong, Peter Menzies, Cullen Molitor}
 \date{4/9/2022}
 
 \usepackage{amsmath,amssymb}
@@ -41,7 +41,7 @@
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
   pdftitle={Assignment 2 - Almond Yield},
-  pdfauthor={Genevieve Chiong},
+  pdfauthor={Genevieve Chiong, Peter Menzies, Cullen Molitor},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
@@ -86,6 +86,16 @@
 \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
 \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
 \usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -103,20 +113,6 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{-\maxdimen} % remove section numbering
-\usepackage{booktabs}
-\usepackage{longtable}
-\usepackage{array}
-\usepackage{multirow}
-\usepackage{wrapfig}
-\usepackage{float}
-\usepackage{colortbl}
-\usepackage{pdflscape}
-\usepackage{tabu}
-\usepackage{threeparttable}
-\usepackage{threeparttablex}
-\usepackage[normalem]{ulem}
-\usepackage{makecell}
-\usepackage{xcolor}
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
@@ -127,209 +123,58 @@
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\# read in the clim data }
-\NormalTok{clim\_original }\OtherTok{\textless{}{-}} \FunctionTok{read\_delim}\NormalTok{(}\FunctionTok{here}\NormalTok{(}\StringTok{"data"}\NormalTok{, }\StringTok{"clim\_original.txt"}\NormalTok{), }\AttributeTok{delim =} \StringTok{" "}\NormalTok{)}
+\NormalTok{clim }\OtherTok{\textless{}{-}} \FunctionTok{read.table}\NormalTok{(}\FunctionTok{here}\NormalTok{(}\StringTok{"data"}\NormalTok{, }\StringTok{"clim\_original.txt"}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
-
-\begin{verbatim}
-## Warning: One or more parsing issues, see `problems()` for details
-\end{verbatim}
-
-\begin{verbatim}
-## Rows: 7920 Columns: 9
-\end{verbatim}
-
-\begin{verbatim}
-## -- Column specification --------------------------------------------------------
-## Delimiter: " "
-## chr  (1): wyd
-## dbl  (7): D, month, year, wy, tmax_c, tmin_c, precip
-## date (1): day
-\end{verbatim}
-
-\begin{verbatim}
-## 
-## i Use `spec()` to retrieve the full column specification for this data.
-## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
-\end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{clim }\OtherTok{\textless{}{-}} \FunctionTok{read\_delim}\NormalTok{(}\FunctionTok{here}\NormalTok{(}\StringTok{"data"}\NormalTok{, }\StringTok{"clim.txt"}\NormalTok{), }\AttributeTok{delim =} \StringTok{" "}\NormalTok{)}
+\NormalTok{yield\_anomalies }\OtherTok{\textless{}{-}} \FunctionTok{almond\_yield}\NormalTok{(clim) }
+
+\NormalTok{yield\_anomalies }\SpecialCharTok{\%\textgreater{}\%}\NormalTok{ knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(}\AttributeTok{col.names =} \FunctionTok{c}\NormalTok{(}\StringTok{"Year"}\NormalTok{,}
+                                               \StringTok{"Almond Yield (tons/acre"}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-## Rows: 7920 Columns: 10
-\end{verbatim}
+\begin{longtable}[]{@{}rr@{}}
+\toprule
+Year & Almond Yield (tons/acre \\
+\midrule
+\endhead
+1988 & NA \\
+1989 & -0.3552237 \\
+1990 & 9.2906757 \\
+1991 & 68.9130633 \\
+1992 & 15.4280698 \\
+1993 & 20.2083803 \\
+1994 & 2.4820009 \\
+1995 & 1919.9811511 \\
+1996 & 3.5818399 \\
+1997 & 329.6938750 \\
+1998 & 27.8636956 \\
+1999 & -0.1436364 \\
+2000 & 9.5999883 \\
+2001 & 159.5119587 \\
+2002 & 0.2450914 \\
+2003 & -0.2585997 \\
+2004 & -0.2367722 \\
+2005 & 656.3724121 \\
+2006 & 18.6324135 \\
+2007 & 20.2007396 \\
+2008 & 576.2821943 \\
+2009 & 0.7367438 \\
+2010 & 153.7655092 \\
+\bottomrule
+\end{longtable}
 
-\begin{verbatim}
-## -- Column specification --------------------------------------------------------
-## Delimiter: " "
-## dbl  (9): N, day, month, year, wy, tmax_c, tmin_c, precip, wyd
-## date (1): date
-\end{verbatim}
-
-\begin{verbatim}
-## 
-## i Use `spec()` to retrieve the full column specification for this data.
-## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# wrangle the data to find monthly averages of min temp and precipitation for February}
-\NormalTok{clim\_jan\_feb }\OtherTok{\textless{}{-}}\NormalTok{ clim }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{filter}\NormalTok{(month }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{group\_by}\NormalTok{(year, month) }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{avg\_tmin =} \FunctionTok{mean}\NormalTok{(tmin\_c, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
-            \AttributeTok{avg\_precip =} \FunctionTok{mean}\NormalTok{(precip, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## `summarise()` has grouped output by 'year'. You can override using the `.groups` argument.
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{yield\_anomalies }\OtherTok{\textless{}{-}} \FunctionTok{almond\_yield}\NormalTok{(clim)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## Warning in almond_yield(clim): year '1988' lacks sufficient data to calculate
-## yield anomaly
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{yield\_anomalies }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{kable}\NormalTok{()}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{tabular}{r|r}
-\hline
-year & yield\\
-\hline
-1988 & NA\\
-\hline
-1989 & -0.3552237\\
-\hline
-1990 & 9.2906757\\
-\hline
-1991 & 68.9130633\\
-\hline
-1992 & 15.4280698\\
-\hline
-1993 & 20.2083803\\
-\hline
-1994 & 2.4820009\\
-\hline
-1995 & 1919.9811511\\
-\hline
-1996 & 3.5818399\\
-\hline
-1997 & 329.6938750\\
-\hline
-1998 & 27.8636956\\
-\hline
-1999 & -0.1436364\\
-\hline
-2000 & 9.5999883\\
-\hline
-2001 & 159.5119587\\
-\hline
-2002 & 0.2450914\\
-\hline
-2003 & -0.2585997\\
-\hline
-2004 & -0.2367722\\
-\hline
-2005 & 656.3724121\\
-\hline
-2006 & 18.6324135\\
-\hline
-2007 & 20.2007396\\
-\hline
-2008 & 576.2821943\\
-\hline
-2009 & 0.7367438\\
-\hline
-2010 & 153.7655092\\
-\hline
-\end{tabular}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{yield\_anomalies }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{kable}\NormalTok{(}\AttributeTok{col.names =} \FunctionTok{c}\NormalTok{(}\StringTok{"Year"}\NormalTok{,}
-                                        \StringTok{"Almond Yield }\SpecialCharTok{\textbackslash{}n}\StringTok{Anomaly (tons/acre)"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{bootstrap\_options =} \StringTok{"striped"}\NormalTok{,}
-                \AttributeTok{full\_width =} \ConstantTok{FALSE}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{table}
-\centering
-\begin{tabular}{r|r}
-\hline
-Year & Almond Yield 
-Anomaly (tons/acre)\\
-\hline
-1988 & NA\\
-\hline
-1989 & -0.3552237\\
-\hline
-1990 & 9.2906757\\
-\hline
-1991 & 68.9130633\\
-\hline
-1992 & 15.4280698\\
-\hline
-1993 & 20.2083803\\
-\hline
-1994 & 2.4820009\\
-\hline
-1995 & 1919.9811511\\
-\hline
-1996 & 3.5818399\\
-\hline
-1997 & 329.6938750\\
-\hline
-1998 & 27.8636956\\
-\hline
-1999 & -0.1436364\\
-\hline
-2000 & 9.5999883\\
-\hline
-2001 & 159.5119587\\
-\hline
-2002 & 0.2450914\\
-\hline
-2003 & -0.2585997\\
-\hline
-2004 & -0.2367722\\
-\hline
-2005 & 656.3724121\\
-\hline
-2006 & 18.6324135\\
-\hline
-2007 & 20.2007396\\
-\hline
-2008 & 576.2821943\\
-\hline
-2009 & 0.7367438\\
-\hline
-2010 & 153.7655092\\
-\hline
-\end{tabular}
-\end{table}
+The above table shows annual almond yield anomaly estimated by linear
+regression using precipitation and temperature data.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{yield\_plot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(yield\_anomalies, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ year, }\AttributeTok{y =}\NormalTok{ yield)) }\SpecialCharTok{+}
   \FunctionTok{geom\_line}\NormalTok{() }\SpecialCharTok{+}
-  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Annual Almond Yield Anomalies"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Yield (tons/acre)"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Year"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Annual Almond Yield Anomalies"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Yield (tons/acre)"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Year"}\NormalTok{, }\AttributeTok{tag =} \StringTok{"a"}\NormalTok{) }\SpecialCharTok{+}
   \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
   \FunctionTok{theme}\NormalTok{(}\AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{))}
 \end{Highlighting}
@@ -341,15 +186,7 @@ Anomaly (tons/acre)\\
   \FunctionTok{filter}\NormalTok{(month }\SpecialCharTok{==} \DecValTok{1}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
   \FunctionTok{group\_by}\NormalTok{(year, month) }\SpecialCharTok{\%\textgreater{}\%} 
   \FunctionTok{summarize}\NormalTok{(}\AttributeTok{sum\_precip =} \FunctionTok{sum}\NormalTok{(precip))}
-\end{Highlighting}
-\end{Shaded}
 
-\begin{verbatim}
-## `summarise()` has grouped output by 'year'. You can override using the `.groups` argument.
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \NormalTok{mean\_min\_temp }\OtherTok{\textless{}{-}}\NormalTok{ clim }\SpecialCharTok{\%\textgreater{}\%} 
   \FunctionTok{filter}\NormalTok{(month }\SpecialCharTok{==} \DecValTok{2}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
   \FunctionTok{group\_by}\NormalTok{(year, month) }\SpecialCharTok{\%\textgreater{}\%} 
@@ -357,21 +194,17 @@ Anomaly (tons/acre)\\
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-## `summarise()` has grouped output by 'year'. You can override using the `.groups` argument.
-\end{verbatim}
-
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{precip\_plot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(sum\_precip, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ year, }\AttributeTok{y =}\NormalTok{ sum\_precip)) }\SpecialCharTok{+}
   \FunctionTok{geom\_line}\NormalTok{() }\SpecialCharTok{+}
-  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"January Precipitation"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Precipitation (mm)"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Year"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"January Precipitation"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Precipitation (mm)"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Year"}\NormalTok{, }\AttributeTok{tag =} \StringTok{"b"}\NormalTok{) }\SpecialCharTok{+}
   \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
   \FunctionTok{theme}\NormalTok{(}\AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{))}
 
 \NormalTok{temp\_plot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(mean\_min\_temp, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ year, }\AttributeTok{y =}\NormalTok{ mean\_min\_temp)) }\SpecialCharTok{+}
   \FunctionTok{geom\_line}\NormalTok{() }\SpecialCharTok{+}
-  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"February Mean Minimum Temperature"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Mean Minimum }\SpecialCharTok{\textbackslash{}n}\StringTok{ February Temperature (ºC)"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Year"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"February Mininum Temperatures"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Mean Minimum }\SpecialCharTok{\textbackslash{}n}\StringTok{ February }\SpecialCharTok{\textbackslash{}n}\StringTok{ Temperature (ºC)"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Year"}\NormalTok{, }\AttributeTok{tag =} \StringTok{"c"}\NormalTok{) }\SpecialCharTok{+}
   \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
   \FunctionTok{theme}\NormalTok{(}\AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{))}
 \end{Highlighting}
@@ -383,10 +216,19 @@ Anomaly (tons/acre)\\
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-## Warning: Removed 1 row(s) containing missing values (geom_path).
-\end{verbatim}
-
 \includegraphics{assignment2_almond_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+Plot (a) shows estimated annual almond yield anomaly based on
+temperature and precipitation data. Plot (b) shows summed precipitation
+in January of each year. Plot (c) shows mean minimum daily temperatures
+in February of each year.
+
+Our results show the almond yield anomaly from 1988 to 2010 is largely
+positive. The negative values are very close to 0, while the positive
+values can be rather large in comparison. There was a spike in almond
+yield in 1995 which matches up with the spike in precipitation the same
+year. The precipitation is likely due to the moderate El Niño event in
+1994-1995. Temperature and precipitation values were not available for
+the months in 1988 and therefore there is no yield anomaly available.
 
 \end{document}

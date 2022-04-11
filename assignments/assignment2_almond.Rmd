@@ -1,12 +1,12 @@
 ---
 title: "Assignment 2 - Almond Yield"
-author: "Genevieve Chiong"
+author: "Genevieve Chiong, Peter Menzies, Cullen Molitor"
 date: "4/9/2022"
 output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 
 library(tidyverse)
 library(here)
@@ -15,30 +15,27 @@ library(patchwork)
 source(here("R/almond_yield.R"))
 ```
 
-
 ```{r}
 # read in the clim data 
-clim_original <- read_delim(here("data", "clim_original.txt"), delim = " ")
-clim <- read_delim(here("data", "clim.txt"), delim = " ")
+clim <- read.table(here("data", "clim_original.txt"))
 ```
 
 ```{r}
-yield_anomalies <- almond_yield(clim)
+yield_anomalies <- almond_yield(clim) 
 
-yield_anomalies %>% knitr::kable()
+yield_anomalies %>% knitr::kable(col.names = c("Year",
+                                               "Almond Yield (tons/acre"))
 ```
 
 The above table shows annual almond yield anomaly estimated by linear regression using precipitation and temperature data.
 
-
 ```{r}
 yield_plot <- ggplot(yield_anomalies, aes(x = year, y = yield)) +
   geom_line() +
-  labs(title = "Annual almond yield anomalies", y = "Yield (tons/acre)", x = "Year", tag = "a") +
+  labs(title = "Annual Almond Yield Anomalies", y = "Yield (tons/acre)", x = "Year", tag = "a") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5))
 ```
-
 
 ```{r}
 sum_precip <- clim %>% 
@@ -55,13 +52,13 @@ mean_min_temp <- clim %>%
 ```{r}
 precip_plot <- ggplot(sum_precip, aes(x = year, y = sum_precip)) +
   geom_line() +
-  labs(title = "January Precip", y = "Precip (mm)", x = "Year", tag = "b") +
+  labs(title = "January Precipitation", y = "Precipitation (mm)", x = "Year", tag = "b") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5))
 
 temp_plot <- ggplot(mean_min_temp, aes(x = year, y = mean_min_temp)) +
   geom_line() +
-  labs(title = "February mean min temperatures", y = "Mean min \n Feb temp (ºC)", x = "Year", tag = "c") +
+  labs(title = "February Mininum Temperatures", y = "Mean Minimum \n February \n Temperature (ºC)", x = "Year", tag = "c") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5))
 ```
@@ -76,6 +73,6 @@ Plot (b) shows summed precipitation in January of each year.
 Plot (c) shows mean minimum daily temperatures in February of each year.
 
 
-
+Our results show the almond yield anomaly from 1988 to 2010 is largely positive. The negative values are very close to 0, while the positive values can be rather large in comparison. There was a spike in almond yield in 1995 which matches up with the spike in precipitation the same year. The precipitation is likely due to the moderate El Niño event in 1994-1995. Temperature and precipitation values were not available for the months in 1988 and therefore there is no yield anomaly available. 
 
 
