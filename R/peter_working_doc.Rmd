@@ -36,7 +36,7 @@ calc_almond_yield <- function(df, params) {
     {
     
       yields_df[i, "yield"] <- NA
-      warning("certain years lacked sufficient data - the yield column in these instances contain 'NA'")
+      warning(paste0("year '", year_i, "' lacks sufficient data to calculate yield anomaly"))
     
     }
     
