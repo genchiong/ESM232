@@ -2,7 +2,7 @@
 title: "ESM 262 Assignment 2 - Almond Yield"
 author: "Genevieve Chiong, Peter Menzies, Cullen Molitor"
 date: "4/9/2022"
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
