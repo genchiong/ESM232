@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 library(tidyverse)
 library(here)
 library(patchwork)
+library(kableExtra)
 
 source(here("R/almond_yield.R"))
 ```
@@ -23,8 +24,10 @@ clim <- read.table(here("data", "clim_original.txt"))
 ```{r}
 yield_anomalies <- almond_yield(clim) 
 
-yield_anomalies %>% knitr::kable(col.names = c("Year",
-                                               "Almond Yield (tons/acre"))
+yield_anomalies %>% kable(col.names = c("Year",
+                                        "Almond Yield (tons/acre")) %>%
+  kable_styling(bootstrap_options = "striped",
+                full_width = FALSE)
 ```
 
 The above table shows annual almond yield anomaly estimated by linear regression using precipitation and temperature data.
