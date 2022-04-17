@@ -1,0 +1,64 @@
+---
+title: "Almond Yield and Profit Model"
+author: "Genevieve Chiong"
+date: "4/16/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(janitor)
+library(here)
+library(lubridate)
+library(patchwork)
+library(kableExtra)
+
+source(here("R/gen_almond_yield.R"))
+source(here("R/compute_almond_profit.R"))
+source(here("R/compute_NPV.R"))
+```
+
+```{r}
+# read in and clean data 
+clim <- read.table(here("data", "clim_original.txt")) %>% 
+  clean_names() 
+
+# find temperature in February
+almond_temp <- clim %>% 
+  filter(month == 2) %>% 
+  group_by(year) %>% 
+  summarize(mean_min_temp = mean(tmin_c)) %>% 
+  select(year, mean_min_temp)
+
+# find precipitation in January
+almond_precip <- clim %>% 
+  filter(month == 1) %>% 
+  group_by(year) %>% 
+  summarize(sum_precip = sum(precip)) %>% 
+  select(year, sum_precip)
+
+clim_new <- left_join(almond_temp, almond_precip,
+                      by = c("year" = "year"))
+```
+
+
+```{r}
+yield <- gen_almond_yield(year = clim_new$year, 
+                          precip = clim_new$sum_precip,
+                          temp = clim_new$mean_min_temp)
+```
+
+
+```{r}
+almond_profit <- compute_almond_profit(gen_almond_yield = yield$gen_almond_yield,
+                                       year = yield$year,
+                                       price = 1000,
+                                       discount_rate = 0.15)
+```
+
+
+
+
+
