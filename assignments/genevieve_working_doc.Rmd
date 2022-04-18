@@ -59,6 +59,17 @@ almond_profit <- compute_almond_profit(gen_almond_yield = yield$gen_almond_yield
 ```
 
 
+```{r}
+# sensitivity analysis 
+# generate samples for both parameters - temperature, precipitation, price? 
+nsamples = 100
+deviation = 0.15
+
+```
+
+
+
+
 
 
 
