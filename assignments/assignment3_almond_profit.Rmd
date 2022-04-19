@@ -6,7 +6,7 @@ output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 
 library(tidyverse)
 library(janitor)
@@ -75,21 +75,21 @@ mean_annual_npv <- map_df(results, `[`, "mean_npv") %>%
 
 
 ```{r fig.height=5.5, fig.width=8}
-price_plot <- ggplot(mean_annual_npv, aes(x = price, y = mean_npv)) +
+price_plot <- ggplot(mean_annual_npv, aes(x = price, y = mean_npv, color = discount)) +
   geom_point() +
-  labs(x = "Price", y = "NPV (mean)")
+  labs(x = "Price", y = "NPV (mean)", color = "Discount")
 
-discount_plot <- ggplot(mean_annual_npv, aes(x = discount, y = mean_npv)) +
+discount_plot <- ggplot(mean_annual_npv, aes(x = discount, y = mean_npv, color = price)) +
   geom_point() +
-  labs(x = "Discount Rate", y = "NPV (mean)")
+  labs(x = "Discount Rate", y = "NPV (mean)", color = "Price")
 
-a_plot <- ggplot(mean_annual_npv, aes(x = a, y = mean_npv)) +
+a_plot <- ggplot(mean_annual_npv, aes(x = a, y = mean_npv, color = price)) +
   geom_point() +
-  labs(x = "a (temp coefficient 1)", y = "NPV (mean)") 
+  labs(x = "a (temp coefficient 1)", y = "NPV (mean)", color = "Price") 
 
-c_plot <- ggplot(mean_annual_npv, aes(x = c, y = mean_npv)) +
+c_plot <- ggplot(mean_annual_npv, aes(x = c, y = mean_npv, color = price)) +
   geom_point() +
-  labs(x = "c (precip coefficient 1)", y = "NPV (mean)") 
+  labs(x = "c (precip coefficient 1)", y = "NPV (mean)", color = "Price") 
 
 p <- price_plot / discount_plot | a_plot / c_plot
 p + plot_annotation(

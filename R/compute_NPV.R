@@ -1,8 +1,8 @@
-#' Compute NPV 
+#' compute_NPV 
 #' 
 #' compute net present value
-#' @param value/cost ($)
-#' @param time in the future that cost/value occurs (years)
+#' @param value numeric ($)
+#' @param time numeric in the future that cost/value occurs (years)
 #' @param discount_rate numeric discount on price ($/ton/acre)
 #' @return value in $
 
