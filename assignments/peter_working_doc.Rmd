@@ -46,7 +46,14 @@ nsamples = 300
 price_vec = runif(min=base_price-deviation*base_price,
                 max = base_price+deviation*base_price, n=nsamples)
 
-params <- tibble(a = a_vec, c = c_vec, price = price_vec)
+deviation = .15
+base_discount = .15
+nsamples = 300
+
+discount_vec = runif(min=base_discount-deviation*base_discount,
+                max = base_discount+deviation*base_discount, n=nsamples)
+
+params <- tibble(a = a_vec, c = c_vec, price = price_vec, discount = discount_vec)
 
 results <- params %>% 
   pmap(almond_yield_profit,
@@ -67,7 +74,14 @@ a_plot <- ggplot(mean_annual_npv, aes(x = a, y = mean_npv)) +
 c_plot <- ggplot(mean_annual_npv, aes(x = c, y = mean_npv)) +
   geom_point()
 
-price_plot / a_plot / c_plot
+discount_plot <- ggplot(mean_annual_npv, aes(x = discount, y = mean_npv)) +
+  geom_point()
+
+discount_plot
+
+price_plot
+
+price_plot / discount_plot | a_plot / c_plot
 ```
 
 
