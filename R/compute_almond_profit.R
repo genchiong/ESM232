@@ -25,3 +25,5 @@ compute_almond_profit = function(gen_almond_yield, price, year, discount_rate = 
   
   return(yearprofit)
 }
+
+

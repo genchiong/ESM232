@@ -79,10 +79,6 @@ results <- params %>% pmap(compute_almond_profit,
                          gen_almond_yield = yield$gen_almond_yield,
                          year = yield$year)
 
-results[[1]]
-
-length(results)
-
 npv_new <- map_df(results, `[`, c("npv")) 
 npv_new <- cbind.data.frame(npv_new, params)
 
