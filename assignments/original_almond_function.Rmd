@@ -1,0 +1,61 @@
+---
+title: "Original almond yield function"
+author: "Peter Menzies"
+date: "4/10/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+calc_almond_yield <- function(df, params) {
+  
+  years <- unique(df$year)
+  yields_df <- data.frame(year = years, yield = numeric(length(years)))
+  
+  for (i in seq_along(years)) {
+    
+    year_i = years[i]
+    
+    if (length(df$tmin_c[df$year == year_i & df$month == 2]) != 0 &
+        length(df$precip[df$year == year_i & df$month == 1]) != 0) 
+      {
+    
+        min_temp_feb <- mean(df$tmin_c[df$year == year_i & df$month == 2])
+        precip_jan <- mean(df$precip[df$year == year_i & df$month == 1])
+        
+        yield <- (params[1] * min_temp_feb) + (params[2] * min_temp_feb ^ 2) +
+          (params[3] * precip_jan) + (params[4] * precip_jan ^ 2) + params[5]
+        
+        yields_df[i, "yield"] <- yield
+      
+    } else 
+      
+    {
+    
+      yields_df[i, "yield"] <- NA
+      warning(paste0("year '", year_i, "' lacks sufficient data to calculate yield anomaly"))
+    
+    }
+    
+  } 
+  
+  return(yields_df)
+  
+}
+```
+
+
+```{r}
+params <- c(-0.015, -0.0046, -0.07, 0.0043, 0.28)
+
+test <- calc_almond_yield(df, params)
+```
+
+
+
+
+
+

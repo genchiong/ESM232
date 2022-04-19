@@ -1,5 +1,5 @@
 ---
-title: "Untitled"
+title: "Almond profit sensitivity analysis"
 author: "Peter Menzies"
 date: "4/10/2022"
 output: html_document
@@ -7,52 +7,74 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(janitor)
+library(here)
+library(lubridate)
+library(patchwork)
+library(kableExtra)
+
+source(here("R/gen_almond_yield.R"))
+source(here("R/compute_almond_profit.R"))
+source(here("R/compute_NPV.R"))
 ```
 
 ```{r}
-calc_almond_yield <- function(df, params) {
-  
-  years <- unique(df$year)
-  yields_df <- data.frame(year = years, yield = numeric(length(years)))
-  
-  for (i in seq_along(years)) {
-    
-    year_i = years[i]
-    
-    if (length(df$tmin_c[df$year == year_i & df$month == 2]) != 0 &
-        length(df$precip[df$year == year_i & df$month == 1]) != 0) 
-      {
-    
-        min_temp_feb <- mean(df$tmin_c[df$year == year_i & df$month == 2])
-        precip_jan <- mean(df$precip[df$year == year_i & df$month == 1])
-        
-        yield <- (params[1] * min_temp_feb) + (params[2] * min_temp_feb ^ 2) +
-          (params[3] * precip_jan) + (params[4] * precip_jan ^ 2) + params[5]
-        
-        yields_df[i, "yield"] <- yield
-      
-    } else 
-      
-    {
-    
-      yields_df[i, "yield"] <- NA
-      warning(paste0("year '", year_i, "' lacks sufficient data to calculate yield anomaly"))
-    
-    }
-    
-  } 
-  
-  return(yields_df)
-  
-}
+# read in and clean data 
+clim <- read.table(here("data", "clim_original.txt")) %>% 
+  clean_names() 
+
+```
+
+```{r}
+deviation = .15
+base_a = 0.015
+base_c = 0.07
+nsamples = 300
+
+a_vec = runif(min=base_a-deviation*base_a,
+                max = base_a+deviation*base_a, n=nsamples)
+
+c_vec = runif(min=base_c-deviation*base_c,
+                max = base_c+deviation*base_c, n=nsamples)
+
+deviation = .15
+base_price = 1000
+nsamples = 300
+
+price_vec = runif(min=base_price-deviation*base_price,
+                max = base_price+deviation*base_price, n=nsamples)
+
+params <- tibble(a = a_vec, c = c_vec, price = price_vec)
+
+results <- params %>% 
+  pmap(almond_yield_profit,
+       df = clim)
+
+mean_annual_npv <- map_df(results, `[`, "mean_npv") %>% 
+  cbind.data.frame(params)
 ```
 
 
 ```{r}
-params <- c(-0.015, -0.0046, -0.07, 0.0043, 0.28)
+price_plot <- ggplot(mean_annual_npv, aes(x = price, y = mean_npv)) +
+  geom_point()
 
-test <- calc_almond_yield(df, params)
+a_plot <- ggplot(mean_annual_npv, aes(x = a, y = mean_npv)) +
+  geom_point()
+
+c_plot <- ggplot(mean_annual_npv, aes(x = c, y = mean_npv)) +
+  geom_point()
+
+price_plot / a_plot / c_plot
 ```
+
+
+
+
+
+
 
 
 

@@ -17,7 +17,8 @@ compute_almond_profit = function(gen_almond_yield, price, year, discount_rate = 
   scenario = seq(from = 1, to = length(gen_almond_yield)) 
   yearprofit = data.frame(scenario = scenario, 
                           almond_yield = gen_almond_yield,
-                          year = year)
+                          year = year,
+                          price = price)
   yearprofit$net = yearprofit$almond_yield * price
   
   yearprofit = yearprofit %>% 
