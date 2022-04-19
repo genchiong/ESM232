@@ -18,6 +18,7 @@ library(kableExtra)
 source(here("R/gen_almond_yield.R"))
 source(here("R/compute_almond_profit.R"))
 source(here("R/compute_NPV.R"))
+source(here("R/almond_yield_profit.R"))
 ```
 
 ```{r}
