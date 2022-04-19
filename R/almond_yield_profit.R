@@ -1,7 +1,7 @@
 #' almond_yield_profit
 #'
 #' Compute amount of almond yield based on climate data
-#' @param df dataframe containing daily climate observations with columns "year", "month", "tmin_c" (minimum temperature in ºC), and "precip" (precipitation in mm)
+#' @param df dataframe containing daily climate observations with columns "year", "month" (1-12), "tmin_c" (minimum temperature in ºC), and "precip" (precipitation in mm)
 #' @param a numeric coefficient of mean temp min
 #' @param b numeric coefficient of mean temp min squared
 #' @param c numeric coefficient of precip sum
