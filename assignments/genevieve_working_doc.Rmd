@@ -58,6 +58,56 @@ almond_profit <- compute_almond_profit(gen_almond_yield = yield$gen_almond_yield
                                        discount_rate = 0.15)
 ```
 
+
+
+```{r}
+# sensitivity analysis 
+# generate samples for both parameters - price and discount rate 
+nsamples = 500
+
+price = rnorm(mean = 4000,
+              sd = 500,
+              n = nsamples)
+
+discount_rate = rnorm(mean = 0.15,
+                      sd = 0.1, 
+                      n = nsamples)
+
+params <- cbind.data.frame(price, discount_rate)
+
+results <- params %>% pmap(compute_almond_profit,
+                         gen_almond_yield = yield$gen_almond_yield,
+                         year = yield$year)
+
+results[[1]]
+
+length(results)
+
+npv_new <- map_df(results, `[`, c("npv")) 
+npv_new <- cbind.data.frame(npv_new, params)
+
+graph1 <- ggplot(npv_new,
+             aes(x = price,
+                 y = npv,
+                 col = discount_rate)) + 
+  geom_point(cex = 2) + 
+  labs(x = "Price",
+       y = "NPV")
+
+graph2 <- ggplot(npv_new,
+             aes(x = discount_rate,
+                 y = npv,
+                 col = price)) + 
+  geom_point(cex = 2) + 
+  labs(x = "Discount Rate",
+       y = "NPV")
+
+graph1
+graph2
+```
+
+
+
 ```{r}
 deviation = .15
 base_a = 0.015
@@ -78,6 +128,7 @@ results <- params %>%
        temp = clim_new$mean_min_temp)
 tmp = map_df(results, `[`)
 ```
+
 
 ```{r}
 ggplot(data = tmp, aes(x = year, y = gen_almond_yield)) +
@@ -111,7 +162,6 @@ price_results_df = map_df(price_results, `[`)
 ggplot(data = price_results_df, aes(x = year, y = npv, group = year)) +
   geom_boxplot()
 ```
-
 
 
 
