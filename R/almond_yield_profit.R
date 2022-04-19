@@ -1,9 +1,15 @@
-#' almond_yield
+#' almond_yield_profit
 #'
 #' Compute amount of almond yield based on climate data
 #' @param df dataframe containing climate data
-#' @param params numeric vector of parameters values
-#' @return yields_df: dataframe containing yield anomaly (tons/acre) for each year
+#' @param a numeric coefficient of mean temp min
+#' @param b numeric coefficient of mean temp min squared
+#' @param c numeric coefficient of precip sum
+#' @param d numeric coefficient of precip sum squared
+#' @param e numeric constant
+#' @param price numeric ($/ton/acre)
+#' @param discount_rate numeric discount on price ($/ton/acre)
+#' @return list containing 1) yield profit ($/tons/acre) for each year and 2) mean of the net present value (NPV)
 
 
 almond_yield_profit <- function(df, a=-0.015, b=-0.0046, c=-0.07, d=0.0043, e=0.28,

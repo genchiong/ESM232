@@ -1,8 +1,8 @@
 ---
 title: "Almond profit sensitivity analysis"
-author: "Peter Menzies"
+author: "Peter Menzies, Genevieve Chiong, Cullen Molitor"
 date: "4/10/2022"
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -15,46 +15,55 @@ library(lubridate)
 library(patchwork)
 library(kableExtra)
 
-source(here("R/gen_almond_yield.R"))
-source(here("R/compute_almond_profit.R"))
-source(here("R/compute_NPV.R"))
-source(here("R/almond_yield_profit.R"))
+source(here("R", "compute_NPV.R"))
+source(here("R", "almond_yield_profit.R"))
 ```
 
 ```{r}
 # read in and clean data 
 clim <- read.table(here("data", "clim_original.txt")) %>% 
   clean_names() 
-
 ```
 
 ```{r}
-deviation = .15
-base_a = 0.015
-base_c = 0.07
-nsamples = 300
+deviation <- .15
+base_a <- 0.015
+base_c <- 0.07
+nsamples <- 300
 
-a_vec = runif(min=base_a-deviation*base_a,
-                max = base_a+deviation*base_a, n=nsamples)
+a_vec <- runif(
+  min = base_a - deviation * base_a,
+  max = base_a + deviation * base_a, 
+  n = nsamples)
 
-c_vec = runif(min=base_c-deviation*base_c,
-                max = base_c+deviation*base_c, n=nsamples)
+c_vec <- runif(
+  min = base_c - deviation * base_c,
+  max = base_c + deviation * base_c, 
+  n = nsamples)
 
-deviation = .15
-base_price = 1000
-nsamples = 300
+deviation <- .15
+base_price <- 1000
+nsamples <- 300
 
-price_vec = runif(min=base_price-deviation*base_price,
-                max = base_price+deviation*base_price, n=nsamples)
+price_vec <- runif(
+  min = base_price - deviation * base_price,
+  max = base_price + deviation * base_price, 
+  n = nsamples)
 
-deviation = .15
-base_discount = .15
-nsamples = 300
+deviation <- .15
+base_discount <- .15
+nsamples <- 300
 
-discount_vec = runif(min=base_discount-deviation*base_discount,
-                max = base_discount+deviation*base_discount, n=nsamples)
+discount_vec <- runif(
+  min = base_discount - deviation * base_discount,
+  max = base_discount + deviation * base_discount, 
+  n = nsamples)
 
-params <- tibble(a = a_vec, c = c_vec, price = price_vec, discount = discount_vec)
+params <- tibble(
+  a = a_vec, 
+  c = c_vec, 
+  price = price_vec, 
+  discount = discount_vec)
 
 results <- params %>% 
   pmap(almond_yield_profit,
@@ -65,24 +74,28 @@ mean_annual_npv <- map_df(results, `[`, "mean_npv") %>%
 ```
 
 
-```{r}
+```{r fig.height=5.5, fig.width=8}
 price_plot <- ggplot(mean_annual_npv, aes(x = price, y = mean_npv)) +
-  geom_point()
-
-a_plot <- ggplot(mean_annual_npv, aes(x = a, y = mean_npv)) +
-  geom_point()
-
-c_plot <- ggplot(mean_annual_npv, aes(x = c, y = mean_npv)) +
-  geom_point()
+  geom_point() +
+  labs(x = "Price", y = "NPV (mean)")
 
 discount_plot <- ggplot(mean_annual_npv, aes(x = discount, y = mean_npv)) +
-  geom_point()
+  geom_point() +
+  labs(x = "Discount Rate", y = "NPV (mean)")
 
-discount_plot
+a_plot <- ggplot(mean_annual_npv, aes(x = a, y = mean_npv)) +
+  geom_point() +
+  labs(x = "a (temp coefficient 1)", y = "NPV (mean)") 
 
-price_plot
+c_plot <- ggplot(mean_annual_npv, aes(x = c, y = mean_npv)) +
+  geom_point() +
+  labs(x = "c (precip coefficient 1)", y = "NPV (mean)") 
 
-price_plot / discount_plot | a_plot / c_plot
+p <- price_plot / discount_plot | a_plot / c_plot
+p + plot_annotation(
+  title = 'Informal sensitivity analysis',
+  subtitle = 'Almond yield net present value (NPV) vs parameters') &
+  theme_minimal()
 ```
 
 
